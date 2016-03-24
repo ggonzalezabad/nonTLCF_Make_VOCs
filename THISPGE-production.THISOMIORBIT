@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+export MACHINE=`uname -a | awk '{print $2}'`
+export MAC=`echo $MACHINE | awk '{print substr($0, 0, 3)}'`
+
+export FLAVOR=linux
+
+export OMIUTIL=/pool/cluster/tpkutils/HDF/32bit
+source $OMIUTIL/SDPTK5.2.11v1.00/bin/$FLAVOR/pgs-dev-env.ksh
+export MACHINE=`uname -a | awk '{print $2}'`
+
+export SAOPGE=`(cd ../; pwd | awk -F "/" '{print $NF}')`
+echo 'Compiling ' $SAOPGE'.exe for machine ' $MACHINE
+
+export PGEHOME=`pwd`/..
+export PGS_PC_INFO_FILE=$PGEHOME/src/$SAOPGE.pcf_THISOMIORBIT
+export PGEVERSION=`grep PGEVERSION $PGS_PC_INFO_FILE|sed 's/\"//g'|sed 's/|/ /g'|awk '{print $3}'`
+export PGEIODIR=$PGEHOME/out_THISOMIORBIT
+export OMISAOSHARED=../../OMI_SAO_Shared
+export UTDATADIR=/pool/cluster/tkurosu/omi/UTdata
+export UTDATAINS=$UTDATADIR/$SAOPGE/inputs.v$PGEVERSION
+export UTDATAOUT=$UTDATADIR/$SAOPGE/output.v$PGEVERSION
+
+export MACHSHELL=/bin/ksh
+export PGSMSG=$OMISAOSHARED/bin
+export MKFDIR=`pwd`/../../nonTLCF_Make
+gmake --warn-undefined-variables -f $MKFDIR/Makefile.non-TLCF $1
+echo 'EXIT VALUE of Make Process is ' `echo $?`

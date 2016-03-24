@@ -1,0 +1,142 @@
+# ==================================
+#  PATTERN rule for F90 compilation
+# ==================================
+.SUFFIXES: .f90 .f
+
+
+$(LOCALLIB)(%_module.o):
+	$(FC) -c $(FFLAGS) $(MODCMPFLG) $(IFLAGS) $<
+	$(AR) $(ARFLAGS) $@ $*_module.o
+	mv -f *.mod $(PGETMPDIR)
+	$(RM) $*_module.o
+
+.f90.a :
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
+	$(AR) $(ARFLAGS) $@ $*.o
+	$(RM) $*.o
+
+.f.a:
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
+	$(AR) $(ARFLAGS) $@ $*.o
+	$(RM) $*.o
+
+.c.a:
+	$(CC) -c $(CFLAGS) $<
+	$(AR) $(ARFLAGS) $@ $*.o
+	$(RM) $*.o
+
+# ---------------------------------------------
+# Pattern rule for the creation of SMF messages
+# ---------------------------------------------
+PGS_%.f : %.t
+	echo $(PGSBIN)
+	$(PGSBIN)/smfcompile -r -f77 -f $< -o $@
+	$(MV) $(OMISAOSHARED)/src/$@ $(PGETMPDIR)/
+
+# ----------------------------------------------
+# Short-hand notations for compiled MODULE files
+# ----------------------------------------------
+LPRCM = $(LOCALLIB)($(PRCMOD).o)
+LIDXM = $(LOCALLIB)($(IDXMOD).o)
+LPARM = $(LOCALLIB)($(PARMOD).o) 
+LVARM = $(LOCALLIB)($(VARMOD).o) 
+LOMDM = $(LOCALLIB)($(OMDMOD).o)
+LERRM = $(LOCALLIB)($(ERRMOD).o)
+LH5SM = $(LOCALLIB)($(H5SMOD).o)
+LH5FM = $(LOCALLIB)($(H5FMOD).o)
+LMETM = $(LOCALLIB)($(METMOD).o)
+LNLSM = $(LOCALLIB)($(NLSMOD).o)
+LSFIM = $(LOCALLIB)($(SFIMOD).o)
+LAMFM = $(LOCALLIB)($(AMFMOD).o)
+LPXCM = $(LOCALLIB)($(PXCMOD).o)
+
+# =====================================================
+#  Various DEPENDENCIES, which tell Make  to recompile
+#  subroutines when the source files have changed
+# =====================================================
+$(LOCALLIB)($(PRCMOD).o) : $(PRCMOD).f90
+$(LOCALLIB)($(PARMOD).o) : $(PARMOD).f90   $(LPRCM)
+$(LOCALLIB)($(IDXMOD).o) : $(IDXMOD).f90   $(LPRCM) $(LPARM)
+$(LOCALLIB)($(VARMOD).o) : $(VARMOD).f90   $(LPRCM) $(LIDXM) $(LPARM) $(LOMDM)
+$(LOCALLIB)($(OMDMOD).o) : $(OMDMOD).f90   $(LPRCM) $(LIDXM) $(LPARM)
+$(LOCALLIB)($(ERRMOD).o) : $(ERRMOD).f90   $(LPRCM) $(LPARM) $(PGEPGSCMP)
+$(LOCALLIB)($(H5SMOD).o) : $(H5SMOD).f90   $(LPRCM) $(LIDXM) $(LPARM)
+$(LOCALLIB)($(H5FMOD).o) : $(H5FMOD).f90   $(LPRCM) $(LIDXM) $(LPARM) $(LH5SM)
+$(LOCALLIB)($(METMOD).o) : $(METMOD).f90   $(LPRCM) $(LIDXM) $(LPARM) $(LH5SM)
+$(LOCALLIB)($(NLSMOD).o) : $(NLSMOD).f90   $(LPRCM)
+$(LOCALLIB)($(SFIMOD).o) : $(SFIMOD).f90   $(LPRCM) $(LIDXM) $(LOMDM) $(LVARM) $(LERRM)
+$(LOCALLIB)($(AMFMOD).o) : $(AMFMOD).f90   $(LPRCM) $(LIDXM) $(LPARM) $(LOMDM) \
+                                           $(LVARM) $(LH5SM) $(LERRM)
+$(LOCALLIB)($(PXCMOD).o) : $(PXCMOD).f90   $(LPRCM) $(LERRM) $(LVARM) $(LOMDM)
+
+
+$(MAIN).o                : $(MAIN).f90     $(LPRCM) $(LIDXM) $(LPARM) $(LVARM) \
+                                           $(LERRM) $(LH5FM) $(LSFIM)
+
+$(LOCALLIB)(OMSAO_main.o): OMSAO_main.f90  $(LPRCM) $(LIDXM) $(LPARM) $(LVARM) \
+                                           $(LERRM) $(LH5FM) $(LSFIM)
+
+
+$(LOCALLIB)(angle_sat2toa.o)             : angle_sat2toa.f90             $(LPRCM) $(LPARM)
+$(LOCALLIB)(dataspline.o)                : dataspline.f90                $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LSFIM) \
+                                                                         $(LOMDM)
+$(LOCALLIB)(ezspline_interpolation.o)    : ezspline_interpolation.f90    $(LPRCM) $(LERRM)
+$(LOCALLIB)(fitting_functions.o)         : fitting_functions.f90         $(LPRCM) $(LPARM) $(LVARM) 
+$(LOCALLIB)(fitting_loops.o)             : fitting_loops.f90             $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LOMDM) $(LERRM) \
+                                                                         $(LH5SM) $(LH5FM) $(LMETM)
+$(LOCALLIB)(gauss.o)                     : gauss.f90                     $(LPRCM)
+$(LOCALLIB)(he5_input_tools.o)           : he5_input_tools.f90           $(LIDXM) $(LPARM) $(LVARM) \
+                                                                         $(LOMDM) $(LERRM) $(LH5SM)
+$(LOCALLIB)(he5_output_tools.o)          : he5_output_tools.f90          $(LIDXM) $(LPARM) $(LVARM) \
+                                                                         $(LOMDM) $(LERRM) $(LH5SM) \
+                                                                         $(LH5FM) $(LMETM)
+$(LOCALLIB)(metadata_tools.o)            : metadata_tools.f90            $(LPRCM) $(LIDXM) $(LVARM) \
+                                                                         $(LERRM) $(LMETM)
+$(LOCALLIB)(omi_pge_fitting_aux.o)       : omi_pge_fitting_aux.f90       $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LOMDM) $(LERRM) \
+                                                                         $(LH5SM) $(LAMFM)
+$(LOCALLIB)(omi_pge_fitting_process.o)   : omi_pge_fitting_process.f90   $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LOMDM) $(LERRM) \
+                                                                         $(LERRM) $(LH5SM) $(LH5FM) \
+                                                                         $(LMETM)
+$(LOCALLIB)(omi_read_l1b_data.o)         : omi_read_l1b_data.f90         $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LOMDM) $(LERRM)
+$(LOCALLIB)(prepare_databases.o)         : prepare_databases.f90         $(LPRCM) $(LVARM)
+$(LOCALLIB)(prepare_refspecs.o)          : prepare_refspecs.f90          $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM)
+$(LOCALLIB)(radiance_fit.o)              : radiance_fit.f90              $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM)
+$(LOCALLIB)(radiance_wavcal.o)           : radiance_wavcal.f90           $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM)
+$(LOCALLIB)(read_fitting_control_file.o) : read_fitting_control_file.f90 $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LOMDM) $(LERRM)
+$(LOCALLIB)(read_pcf_file.o)             : read_pcf_file.f90             $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LH5SM) \
+                                                                         $(LOMDM)
+$(LOCALLIB)(read_reference_spectra.o)    : read_reference_spectra.f90    $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LH5FM)
+$(LOCALLIB)(sao_pge_utils.o)             : sao_pge_utils.f90             $(LPRCM) $(LIDXM) $(LVARM) \
+                                                                         $(LERRM)
+$(LOCALLIB)(SLATEC_davint.o)             : SLATEC_davint.f90             $(LPRCM)
+$(LOCALLIB)(solar_fit.o)                 : solar_fit.f90                 $(LPRCM) $(LPARM) $(LVARM) \
+                                                                         $(LERRM)
+$(LOCALLIB)(specfit.o)                   : specfit.f90                   $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LNLSM)
+$(LOCALLIB)(spectra.o)                   : spectra.f90                   $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LSFIM)
+$(LOCALLIB)(subtract_cubic.o)            : subtract_cubic.f90            $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LNLSM)
+$(LOCALLIB)(undersample.o)               : undersample.f90               $(LPRCM) $(LIDXM) $(LPARM) \
+                                                                         $(LVARM) $(LERRM) $(LSFIM)
+
+# -----------------
+# SMF message files
+# -----------------
+PGS_OMSAO_52500.f : OMSAO_52500.t
+
+# -------
+# C files
+# -------
+$(LOCALLIB)(unbufferSTDOUT.o)         : unbufferSTDOUT.c

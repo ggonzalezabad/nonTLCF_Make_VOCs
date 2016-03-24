@@ -1,0 +1,97 @@
+# ================================================================================
+# Include file for (GNU) makefiles. Defines platform dependent compiler directives
+# ================================================================================
+
+# ------------------------------------------------------
+# Compiler flags for the different HOSTTYPEs ("FLAVORs")
+# ------------------------------------------------------
+
+ZERO =
+
+
+ifeq ($(FLAVOR), linux32)
+   FC        = ifort
+   CC        = icc
+#   FFLAGSopt = -xN -O3 -ip -no-prec-div -nowarn
+   FFLAGSopt  = -O3 -static  -warn interfaces 
+   FFLAGSopt  = -O3 -static
+   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
+                -warn -fp-stack-check -ftrapuv -debug -fpe0 -gen-interfaces -warn interfaces
+   FFLAGSdbg  = -g -traceback -fpe0 -C -check noarg_temp_created -static
+   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
+                -warn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static
+   FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log 
+   MODCMPFLG  = 
+   MODFLG     = -I
+   ADDLIBD    = 
+   ADDLIBS    = -lsz -lm
+   LNFLAGS    = -static
+   CFLAGS     = -O3 -DLINUX -Df2cFortran
+endif
+
+
+ifeq ($(FLAVOR), linux64)
+   FC        = ifort
+   CC        = icc
+#   FFLAGSopt = -xN -O3 -ip -no-prec-div -nowarn
+   FFLAGSopt  = -O3 -static -warn interfaces -fpp -fPIC -traceback
+   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
+                -nowarn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static -warn interfaces
+#   FFLAGSdbg  = -g -traceback -fpe0 -C -fPIC -static -warn interfaces
+   FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log -fPIC -static
+   MODCMPFLG  = 
+   MODFLG     = -I
+   ADDLIBD    = 
+   ADDLIBS    = -lsz -lm
+   LNFLAGS    =  
+   CFLAGS     = -O3 -DLINUX -Df2cFortran -fPIC
+endif
+
+
+# ---------------------------------------
+# These are the same for all environments
+# ---------------------------------------
+IFLAGS = -I$(OMIUTIL)/include $(MODFLG)$(OMIUTIL)/mod/$(FLAVOR) \
+         $(MODFLG)$(PGETMPDIR) -I$(PGETMPDIR) 
+LFLAGS = -L$(OMIUTIL)/lib/$(FLAVOR) $(ADDLIBD)  -L$(PGETMPDIR) 
+LIBS   = $(PSPLINELIBS) $(NETCDFLIBS)                \
+         $(OMILIBS) $(PGSLIBS) $(HE5LIBS) $(HE4LIBS) $(ADDLIBS)
+
+NETCDFINC = $(OMIUTIL)/netcdf/include
+NETCDFLIB = $(OMIUTIL)/netcdf/lib
+PSPLINEMOD = $(OMIUTIL)/pspline/mod
+PSPLINELIB = $(OMIUTIL)/pspline/lib
+
+IFLAGS = -I$(OMIUTIL)/include                      \
+         -I$(HDFEOS_INC)  $(MODFLG) $(HDFEOS_INC)  \
+         -I$(HDF5INC)     $(MODFLG) $(HDF5INC)     \
+         -I$(HDFINC)      $(MODFLG) $(HDFINC)      \
+         -I$(PGSINC)      $(MODFLG) $(PGSINC)      \
+         -I$(HDFEOS5_INC) $(MODFLG) $(HDFEOS5_INC) \
+         -I$(PGETMPDIR)   $(MODFLG) $(PGETMPDIR)   \
+         -I$(NETCDFINC)   $(MODFLG) $(NETCDFINC)   \
+                          $(MODFLG) $(PSPLINEMOD)
+
+LFLAGS = -L$(PGETMPDIR) -L$(OMIUTIL)/lib                              \
+         -L$(HDFEOS_LIB) -L$(HDFLIB) -L$(PGSLIB) -L$(HDF5LIB) -L$(HDFEOS5_LIB) \
+         -L$(NETCDFLIB) -L$(PSPLINELIB) $(ADDLIBD)
+
+LIBS   = $(PSPLINELIBS) $(NETCDFLIBS)                \
+         $(OMILIBS) $(PGSLIBS) $(HE5LIBS) $(HE4LIBS) $(ADDLIBS)
+
+# ----------------------------- 
+# Setting the compiler flags
+# ----------------------------- 
+FFLAGSnac = $(MODFLG) ./ $(FFLAGSopt)
+FFLAGS    = $(MODFLG) ./ $(FFLAGSopt)
+
+ifdef debug
+   FFLAGSnac = $(MODFLG) ./ $(FFLAGSdbg) $(FLAGS64)
+   FFLAGS    = $(MODFLG) ./ $(FFLAGSdbg) $(FLAGS64)
+endif
+ifdef profile
+   FFLAGSnac = $(MODFLG) ./ $(FFLAGSprof) $(FLAGS64)
+   FFLAGS    = $(MODFLG) ./ $(FFLAGSprof) $(FLAGS64)
+endif
+
+CINCFLGS = -I$(PGSINC) -I$(HDFINC) -I$(HDFEOS_INC) -I$(PGETMPDIR)
