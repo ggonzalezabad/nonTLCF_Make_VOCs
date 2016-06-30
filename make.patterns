@@ -113,7 +113,7 @@ $(NLSMOD).o : $(NLSMOD).f90   $(LPRCM)
 $(WFAMOD).o : $(WFAMOD).f90   $(LPRCM) $(LERRM) $(LPARM) $(LH5SM) \
                               $(LLINM)
 $(SFIMOD).o : $(SFIMOD).f90   $(LPRCM) $(LIDXM) $(LOMDM) $(LVARM) \
-                              $(LERRM)
+                              $(LERRM) $(LH5SM)
 $(PXCMOD).o : $(PXCMOD).f90   $(LPRCM) $(LERRM) $(LPARM) $(LIDXM) \
                               $(LOMDM) $(L1BRM) $(LH5SM) $(LNLSM)
 $(RRFMOD).o : $(RRFMOD).f90   $(LPRCM) $(LPARM) $(LVARM) $(LOMDM) \
