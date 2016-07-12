@@ -36,7 +36,7 @@ ifeq ($(FLAVOR), linux64)
 #   FFLAGSopt = -xN -O3 -ip -no-prec-div -nowarn
    FFLAGSopt  = -O3 -static -warn interfaces -fpp -fPIC -traceback
    FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
-                -nowarn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static -warn interfaces
+                -nowarn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static -warn interfaces -check all
 #   FFLAGSdbg  = -g -traceback -fpe0 -C -fPIC -static -warn interfaces
    FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log -fPIC -static
    MODCMPFLG  = 
