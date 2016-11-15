@@ -120,7 +120,7 @@ $(RRFMOD).o : $(RRFMOD).f90   $(LPRCM) $(LPARM) $(LVARM) $(LOMDM) \
                               $(LERRM) $(LIDXM) $(LSFIM) $(LPFIM) \
                               $(L1BRM)
 $(SWCMOD).o : $(SWCMOD).f90   $(LPRCM) $(LIDXM) $(LERRM) $(LPARM) \
-                              $(LVARM) $(LOMDM) $(LSFIM)
+                              $(LVARM) $(LOMDM) $(LSFIM) $(LH5SM)
 $(XTDMOD).o : $(XTDMOD).f90   $(LPRCM) $(LIDXM) $(LERRM) $(LPARM) \
                               $(LVARM) $(LH5SM) $(LOMDM) $(LNLSM) \
                               $(LMEDM)
