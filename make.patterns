@@ -159,7 +159,7 @@ fitting_functions.o         : fitting_functions.f90               \
 fitting_loops.o             : fitting_loops.f90                   \
                               $(LPRCM) $(LIDXM) $(LPARM) $(LVARM) \
                               $(LOMDM) $(LERRM) $(LSFIM) $(LRRFM) \
-                              $(LH5SM) $(LPFIM)
+                              $(LH5SM) $(LPFIM) radiance_wavcal.o
 
 gauss.o                     : gauss.f90                           \
                               $(LPRCM)
