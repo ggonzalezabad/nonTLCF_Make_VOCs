@@ -1,25 +1,12 @@
 #!/usr/bin/env bash
 
-# ------------------------------------------------------------------------
-# Figure out which bit-type of PGI/pgf95 we are using:
-# ------------------------------------------------------------------------
-# "pgf95 -show" contains information on the bit version (32 or 64) via the
-# variable TARGETARCH, which is either 64 or 32.
-# ------------------------------------------------------------------------
-ifort -V >& compiler.txt
-BITVERSION=$(cat compiler.txt | grep 64 | wc -l)
-if [ ${BITVERSION} -eq 0 ]; then
-   BV=32
-else
-   BV=64
-fi
-rm -f compiler.txt
+# ---------------------------------------------------------------------
+# Following TLCF migration to gfortran 64bit this is the only compiling
+# possibility
+# ---------------------------------------------------------------------
+export OMIUTIL=/data/tempo2/ggonzale/TEMPO_code/ots/gnu
 
-export FLAVOR=linux${BV}
-
-export OMIUTIL=/data/dumbo/gonzalo/lib/Intel
-
-source ${OMIUTIL}/toolkit/bin/${FLAVOR}/pgs-dev-env.ksh
+source ${OMIUTIL}/sdptk/SDPTK5.2.19v1.00/TOOLKIT/bin/linux/pgs-dev-env.ksh
 export MACHINE=`uname -a | awk '{print $2}'`
 
 export SAOPGE=`(cd ../; pwd | awk -F "/" '{print $NF}')`

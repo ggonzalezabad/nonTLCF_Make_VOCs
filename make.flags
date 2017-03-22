@@ -1,52 +1,25 @@
 # ================================================================================
 # Include file for (GNU) makefiles. Defines platform dependent compiler directives
 # ================================================================================
-
-# ------------------------------------------------------
-# Compiler flags for the different HOSTTYPEs ("FLAVORs")
-# ------------------------------------------------------
+# ---------------------------------
+# Compiler flags for gfortran 64bit
+# ---------------------------------
 
 ZERO =
 
-
-ifeq ($(FLAVOR), linux32)
-   FC        = ifort
-   CC        = icc
+FC         = gfortran
+CC         = gcc
 #   FFLAGSopt = -xN -O3 -ip -no-prec-div -nowarn
-   FFLAGSopt  = -O3 -static  -warn interfaces 
-   FFLAGSopt  = -O3 -static
-   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
-                -warn -fp-stack-check -ftrapuv -debug -fpe0 -gen-interfaces -warn interfaces
-   FFLAGSdbg  = -g -traceback -fpe0 -C -check noarg_temp_created -static
-   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
-                -warn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static
-   FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log 
-   MODCMPFLG  = 
-   MODFLG     = -I
-   ADDLIBD    = 
-   ADDLIBS    = -lsz -lm
-   LNFLAGS    = -static
-   CFLAGS     = -O3 -DLINUX -Df2cFortran
-endif
-
-
-ifeq ($(FLAVOR), linux64)
-   FC        = ifort
-   CC        = icc
-#   FFLAGSopt = -xN -O3 -ip -no-prec-div -nowarn
-   FFLAGSopt  = -O3 -static -warn interfaces -fpp -fPIC -traceback
-   FFLAGSdbg  = -g -C -traceback -check bounds -check format -check output_conversion -check uninit \
-                -nowarn -fp-stack-check -ftrapuv -debug -fpe0 -fPIC -static -warn interfaces -check all
+FFLAGSopt  = -O3 -static -Wall -cpp -fPIC -fbacktrace -fcheck=all
+FFLAGSdbg  = -g -C -fbacktrace -fcheck=all -Wall -fPIC -static
 #   FFLAGSdbg  = -g -traceback -fpe0 -C -fPIC -static -warn interfaces
-   FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log -fPIC -static
-   MODCMPFLG  = 
-   MODFLG     = -I
-   ADDLIBD    = 
-   ADDLIBS    = -lsz -lm
-   LNFLAGS    =  
-   CFLAGS     = -O3 -DLINUX -Df2cFortran -fPIC
-endif
-
+#FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log -fPIC -static
+MODCMPFLG  = 
+MODFLG     = -I
+ADDLIBD    = 
+ADDLIBS    = -lsz -lm
+LNFLAGS    =  
+CFLAGS     = -O3 -DLINUX -Df2cFortran -fPIC
 
 # ---------------------------------------
 # These are the same for all environments
