@@ -30,10 +30,10 @@ LFLAGS = -L$(OMIUTIL)/lib/$(FLAVOR) $(ADDLIBD)  -L$(PGETMPDIR)
 LIBS   = $(PSPLINELIBS) $(NETCDFLIBS)                \
          $(OMILIBS) $(PGSLIBS) $(HE5LIBS) $(HE4LIBS) $(ADDLIBS)
 
-NETCDFINC = $(OMIUTIL)/netcdf/include
-NETCDFLIB = $(OMIUTIL)/netcdf/lib
-PSPLINEMOD = $(OMIUTIL)/pspline/mod
-PSPLINELIB = $(OMIUTIL)/pspline/lib
+NETCDFINC = $(OMIUTIL)/include
+NETCDFLIB = $(OMIUTIL)/lib
+PSPLINEMOD = $(OMIUTIL)/mod
+PSPLINELIB = $(OMIUTIL)/lib
 
 IFLAGS = -I$(OMIUTIL)/include                      \
          -I$(HDFEOS_INC)  $(MODFLG) $(HDFEOS_INC)  \
