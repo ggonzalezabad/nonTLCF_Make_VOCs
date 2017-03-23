@@ -17,7 +17,7 @@ FFLAGSdbg  = -g -C -fbacktrace -fcheck=all -Wall -fPIC -static
 MODCMPFLG  = 
 MODFLG     = -I
 ADDLIBD    = 
-ADDLIBS    = -lsz -lm
+ADDLIBS    = -lsz -lm -ldl
 LNFLAGS    =  
 CFLAGS     = -O3 -DLINUX -Df2cFortran -fPIC
 
