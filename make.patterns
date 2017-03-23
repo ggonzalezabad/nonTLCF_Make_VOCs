@@ -29,7 +29,7 @@ $(L1RMOD).o:
 
 .f90.o :
 	$(FC) -c $(FFLAGS) $(IFLAGS) $<
-	mv -f $*.o *genmod* $(PGETMPDIR)
+	mv -f $*.o $(PGETMPDIR)
 
 .f.o:
 	$(FC) -c $(FFLAGS) $(IFLAGS) $<

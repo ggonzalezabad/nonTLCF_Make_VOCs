@@ -76,7 +76,7 @@ cleanexe:
 
 cleanobj: 
 	@echo ' * Removing PGE object files' $(OBJECTS) '...'
-	@-rm -f $(PGETMPDIR)/*.o *__genmod.*
+	@-rm -f $(PGETMPDIR)/*.o 
 
 cleanmod: 
 	@echo ' * Removing compiled F90 Module files in' $(PGETMPDIR) '...'
