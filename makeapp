@@ -21,8 +21,21 @@ export UTDATADIR=/data/tempo2/ggonzale/OMH2O/inputs
 export UTDATAINS=${UTDATADIR}
 export UTDATAOUT=${UTDATADIR}
 
+# ---------------------------------------
+# Include debugging and profiling options
+# ---------------------------------------
+target=$1
+if [ "$1" == "debug" ]; then
+    export debug="true"
+    target="install"
+fi
+if [ "$1" == "profile" ]; then
+    export profile="true"
+    target="install"
+fi
+
 export MACHSHELL=/bin/ksh
 export PGSMSG=${PGEHOME}/bin
 export MKFDIR=`pwd`/../../nonTLCF_Make_VOCs
-gmake --warn-undefined-variables -f ${MKFDIR}/Makefile.non-TLCF $1
+gmake --warn-undefined-variables -f ${MKFDIR}/Makefile.non-TLCF $target
 echo 'EXIT VALUE of Make Process is ' `echo $?`

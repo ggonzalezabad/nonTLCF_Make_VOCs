@@ -4,11 +4,12 @@
 # ---------------------------------
 # Compiler flags for gfortran 64bit
 # ---------------------------------
-FC         = gfortran
+FC         = gfortran -static -fbacktrace -fPIC -cpp
 CC         = gcc
-FFLAGSopt  = -O3 -static -Wall -cpp -fPIC -fbacktrace -fcheck=all
-FFLAGSdbg  = -g -C -fbacktrace -fcheck=all -Wall -fPIC -static
-FFLAGSprof = -O3 -p -prof-dir ../prof -opt-report-file ../prof/opti.log -fPIC -static
+FFLAGSopt  = -O3 -Wall -ftrapv -fcheck=all -Wno-tabs \
+             -ffpe-summary=invalid,zero,overflow,underflow,inexact,denormal
+FFLAGSdbg  = -g -ggdb 
+FFLAGSprof = -O3 -pg
 CFLAGS     = -O3 -DLINUX -Df2cFortran -fPIC
 
 # System libraries
@@ -22,31 +23,29 @@ PSPLINELIB = $(OMIUTIL)/lib
 
 # Include folders
 # ---------------
-IFLAGS   = -I$(OMIUTIL)/include -I$(PSPLINEMOD)      \
-           -I$(PGETMPDIR)       -I$(PGSINC)          \
-           -I$(HDFEOS_INC)      -I$(HDFEOS5_INC)
+IFLAGS   = -I$(OMIUTIL)/include -I$(PSPLINEMOD) \
+           -I$(PGETMPDIR) -I$(PGSINC) \
+           -I$(HDFEOS_INC) -I$(HDFEOS5_INC)
 CINCFLGS = -I$(PGSINC) -I$(HDFINC) -I$(HDFEOS_INC) -I$(PGETMPDIR)
 
 # Linking folders
 # ---------------
-LFLAGS = -L$(OMIUTIL)/lib -L$(HDFEOS_LIB)  \
+LFLAGS = -L$(OMIUTIL)/lib -L$(HDFEOS_LIB) \
          -L$(HDFEOS5_LIB) -L$(PGSLIB)
 
 # Libraries
 # ---------
 LIBS   = $(PSPLINELIBS) $(NETCDFLIBS) \
-         $(OMILIBS) $(PGSLIBS)        \
-         $(HE5LIBS) $(HE4LIBS)        \
-         $(ADDLIBS)
+         $(PGSLIBS) $(HE5LIBS) \
+         $(HE4LIBS) $(ADDLIBS)
 
 # ----------------------------- 
 # Setting the compiler flags
 # -----------------------------
 FFLAGS = $(FFLAGSopt)
-
 ifdef debug
-   FFLAGS    = $(FFLAGSdbg) $(FLAGS64)
+   FFLAGS    = $(FFLAGSdbg)
 endif
 ifdef profile
-   FFLAGS    = $(FFLAGSprof) $(FLAGS64)
+   FFLAGS    = $(FFLAGSprof)
 endif
