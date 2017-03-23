@@ -8,13 +8,13 @@
 # L1b Reader sources (modules!) and some C code
 # ---------------------------------------------
 $(L1HMOD).o:
-	$(FC) -c $(FFLAGS) $(MODCMPFLG) $(IFLAGS) $<
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
 	mv -f *.o *.mod $(PGETMPDIR)
 $(L1ZMOD).o:
-	$(FC) -c $(FFLAGS) $(MODCMPFLG) $(IFLAGS) $<
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
 	mv -f *.o *.mod $(PGETMPDIR)
 $(L1RMOD).o:
-	$(FC) -c $(FFLAGS) $(MODCMPFLG) $(IFLAGS) $<
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
 	mv -f *.o *.mod $(PGETMPDIR)
 .c.o:
 	$(CC) -c $(CFLAGS) $(CINCFLGS) $<
@@ -24,7 +24,7 @@ $(L1RMOD).o:
 # PGE sources
 # -----------
 %_module.o:
-	$(FC) -c $(FFLAGS) $(MODCMPFLG) $(IFLAGS) $<
+	$(FC) -c $(FFLAGS) $(IFLAGS) $<
 	mv -f $*_module.o *.mod $(PGETMPDIR)
 
 .f90.o :

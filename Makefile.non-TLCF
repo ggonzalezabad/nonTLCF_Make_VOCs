@@ -40,8 +40,6 @@ NETCDFLIBS   = -lnetcdf
 HE4LIBS      = -lhdfeos -lmfhdf -lGctp -ldf -ljpeg -lz
 HE5LIBS      = -lhe5_hdfeos -lhdf5_hl -lhdf5_fortran -lhdf5hl_fortran -lhdf5
 PGSLIBS      = -lPGSTK
-OMILIBS      = 
-#OMILIBS      = -lOMIutil
 
 #===============================================================
 
@@ -64,8 +62,6 @@ include $(MKFDIR)/make.flags
 
 
 VPATH = ./$(PGEBINDIR):$(PGETMPDIR):$(OMISAOSHARED)/src
-#vpath OMSAO_%.f90 $(OMISAOSHARED)/src
-#vpath PGS_%.f $(PGETMPDIR)
 
 # ================================================
 # All sources are "sourced out" to an include file
